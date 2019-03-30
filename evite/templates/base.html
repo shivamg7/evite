@@ -15,7 +15,7 @@
   </head>
 <body>
 
-
+{% if error_message %} <p><strong> {{ error_message }} </strong></p>{% endif %}
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Evite</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,17 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>
         </li>
-        
+        <li>
+          <a class='nav-link' href="#">Welcome {% if user %} <span> {{ user.username }} </span> {% endif %}</a>
+        </li>
+        <li>
+          <a class='nav-link' href="{% url 'evite:logout' %}">Logout</a>
+        </li>
+        <li>
+          <a class='nav-link' href="{% url 'evite:createEvent' %}">Create Event</a>
+        </li>
+
+
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search">

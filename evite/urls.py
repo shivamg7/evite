@@ -14,4 +14,8 @@ app_name = 'evite'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('login/', views.login_, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register, name='register'),
+    path('createEvent/', views.createEvent, name='createEvent'),
 ]

@@ -9,7 +9,7 @@ class participant(models.Model):
     name = models.CharField(max_length=20)
     email = models.CharField(max_length=40)
     phone = models.CharField(primary_key=True, max_length=10)
-
+    
     def __str__(self):
         return self.name
 

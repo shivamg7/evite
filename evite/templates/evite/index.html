@@ -12,14 +12,14 @@
 <div class="container">
 
 
-    {% if error_message %} <p><strong> {{ error_message }} </strong></p>{% endif %}
 
 
 
 
 
 
-            <form class="form-signin" action="" name="login" method="POST">
+
+            <form class="form-signin" action="{% url 'evite:login' %}" name="login" method="POST">
                 <h2 class="form-signin-heading">Organizer's Login</h2>
               {% csrf_token %}
                     <label for="inputUserName" class="sr-only">username</label>
@@ -41,7 +41,7 @@
 
                   </form>
 
-                <button  href="" name="register" class="btn btn-lg btn-primary btn-block" style="width:300px;margin:auto;"><em>Register New</em></button>
+              <a href="{% url 'evite:register' %}" >  <button  name="register" class="btn btn-lg btn-primary btn-block" style="width:300px;margin:auto;"><em>Register New</em></button> </a>
             </div>
     </div>
 

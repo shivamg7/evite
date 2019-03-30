@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block head%}
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+{% endblock%}
+
+{% block body %}
+
+<div class="container">
+
+
+    {% if error_message %} <p><strong> {{ error_message }} </strong></p>{% endif %}
+
+
+
+
+
+
+            <form class="form-signin" action="" name="login" method="POST">
+                <h2 class="form-signin-heading">Organizer's Login</h2>
+              {% csrf_token %}
+                    <label for="inputUserName" class="sr-only">username</label>
+                     <br>
+                    <input class="form-control" placeholder="Username" type="text" name="username" for="username">
+
+
+
+                    <label  for="inputPassword" class="sr-only">Password</label>
+
+                    <input type="password" name="password" for="password" class="form-control" placeholder="Password">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                      </label>
+                    </div>
+
+                    <button type="submit" name="login" class="btn btn-lg btn-primary btn-block"><em>Login</em></button>
+
+                  </form>
+
+                <button  href="" name="register" class="btn btn-lg btn-primary btn-block" style="width:300px;margin:auto;"><em>Register New</em></button>
+            </div>
+    </div>
+
+
+{% endblock %}

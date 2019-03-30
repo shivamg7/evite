@@ -20,7 +20,7 @@ urlpatterns = [
     path('createEvent/', views.createEvent, name='createEvent'),
     path('fillProfile/', views.fillProfile, name='fillProfile'),
     path('viewEvent/', views.viewEvent, name='viewEvent'),
-	  path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
-	  path('participantForm/<int:eventid>', views.participantForm, name='bookTicket'),
+	path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
+	path('participantForm/<int:eventid>', views.participantForm, name='participantForm'),
     path('rsvp/<int:eventid>', views.rsvp, name='rsvp'),
 ]

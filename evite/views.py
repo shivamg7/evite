@@ -11,9 +11,9 @@ import smtplib
 
 
 
-from .forms import EventForm,OrganiserForm,RsvpForm
+from .forms import EventForm,OrganiserForm,RsvpForm,ParticipantForms
 
-from .models import organiser,participant,event
+from .models import organiser,participant,event,Ticket
 
 
 # Create your views here.
@@ -184,14 +184,34 @@ def sendEmails(recepients,event):
     server.quit()
 
 
-	
+
 def participantForm(request,eventid):
+    eventVar = event.objects.get(id=eventid)
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
-        form = participantForm(request.POST,request.FILES)
+        form = ParticipantForms(request.POST)
 
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            participantVar = form.save(commit=False)
+            try:
+                participant.objects.get(phone=participantVar.phone)
+            except participant.DoesNotExist:
+                participantVar.save()
+            ticketVar = Ticket(eventV=eventVar,participantV=participantVar)
+            ticketVar.save()
+            #form.save()
+            # redirect to a new URL:
+            return HttpResponse("Ticket Booked")
+            #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
 
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = ParticipantForms()
+
+    return render(request, 'evite/participantForm.html', {'form':form,'event':eventVar})
 def rsvp(request,eventid):
 
     eventVar = event.objects.get(id=eventid)
@@ -226,12 +246,5 @@ def rsvp(request,eventid):
 
     # If this is a GET (or any other method) create the default form.
     else:
-
-        form = ParticipantForm()
-
-    return render(request, 'evite/participantForm.html', {'form':form})
-
         form = RsvpForm()
-
     return render(request, 'evite/rsvporg.html', {'form':form,'event':eventVar})
-

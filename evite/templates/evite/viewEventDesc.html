@@ -11,6 +11,11 @@
           <h1 class="display-4 font-weight-normal">{{event.name}}</h1>
           <p class="lead font-weight-normal">{{event.description}}<br>{{event.city}}<br>{{event.startDate}}-{{event.endDate}}<br>{{event.venue}}</p>
           <a class="btn btn-outline-secondary" href="https://www.google.com/maps/search/?api=1&query={{params}}">See on maps</a>
+		   <form action="{% url 'evite:participantForm' event.id %}" method="post">
+			{%csrf_token%}
+			{{form}}
+			<input type="submit" value="Book Now">
+			</form>
         </div>
         <div class="product-device box-shadow d-none d-md-block"></div>
         <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>

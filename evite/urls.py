@@ -21,4 +21,5 @@ urlpatterns = [
     path('fillProfile/', views.fillProfile, name='fillProfile'),
     path('viewEvent/', views.viewEvent, name='viewEvent'),
 	path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
+	path('participantForm/<int:eventid>', views.participantForm, name='bookTicket'),
 ]

@@ -183,3 +183,27 @@ def sendEmails(recepients,event):
         server.sendmail("rvceise16@gmail.com", recepient, message_body)
 
     server.quit()
+
+	
+def participantForm(request,eventid):
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = participantForm(request.POST,request.FILES)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            participantVar = form.save(commit=False)
+
+            participantVar.save()
+            #form.save()
+            # redirect to a new URL:
+            return HttpResponse("Ticket Booked")
+            #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = ParticipantForm()
+
+    return render(request, 'evite/participantForm.html', {'form':form})

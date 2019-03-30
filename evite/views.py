@@ -172,8 +172,8 @@ def viewEventDesc(request,eventid):
     venue = str(event.objects.values_list('Venue',flat=True).get(id=eventid))
     params = venue.replace(" ","+")
     params = params.replace(",","%2C")
-    return render(request, 'evite/viewEventDesc.html',{'event': event,'params':params})
-    
+    return render(request, 'evite/viewEventDesc.html',{'event': eventvar,'params':params})
+
 
 def sendEmails(recepients,event):
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)

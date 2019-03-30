@@ -23,4 +23,5 @@ urlpatterns = [
 	path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
 	path('participantForm/<int:eventid>', views.participantForm, name='participantForm'),
     path('rsvp/<int:eventid>', views.rsvp, name='rsvp'),
+    path('rsvp-reply/<int:token>', views.replyRSVP, name='rsvp-reply'),
 ]

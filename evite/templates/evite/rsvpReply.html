@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{%block body%}
+
+<div class='container'>
+  <form action="{%url 'evite:rsvp-reply' token%}" method="post">
+    {{form}}
+  </form>
+
+</div>
+
+{%endblock%}

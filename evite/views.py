@@ -116,7 +116,7 @@ def createEvent(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             eventVar = form.save(commit=False)
-            eventVar.organiser = organiser.objects.get(name=request.user.username)
+            #eventVar.organiser = organiser.objects.get(name=request.user.username)
             eventVar.save()
             #form.save()
             # redirect to a new URL:
@@ -152,7 +152,7 @@ def fillProfile(request):
             organiserVar.save()
             #form.save()
             # redirect to a new URL:
-            return HttpResponse("Organiser profile Registered")
+            return HttpResponseRedirect(reverse('evite:index'))
             #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
 
     # If this is a GET (or any other method) create the default form.
@@ -174,10 +174,12 @@ def viewEventDesc(request,eventid):
     return render(request, 'evite/viewEventDesc.html',{'event': eventvar,'params':params})
 
 
-def sendEmails(recepients,event):
+def sendEmails(recepients,event,token=""):
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server.login("rvceise16@gmail.com", "1rv16isxxx")
-    message_body = "HI "+ venue +" "
+    replyRSVP = "Reply to Our RSVP : "+"localhost:8000/evite/rsvp-reply/"+str(event.id)+"/"+str(token)
+    message_body = str(event.name)+"\nHello! "+"Thanks for being a reader of our site.We're happy to inform you that on " + str(event.startDate)+ " we'll hosting our " + str(event.name)+ "in"+str(event.city) +"Be sure to mark "+str(event.startDate)+" on your calendar!""If you have any questions, please don't hesitate to contact us before or during the event."+replyRSVP+"Thank You,"
+
     for recepient in recepients:
         server.sendmail("rvceise16@gmail.com", recepient, message_body)
 
@@ -202,6 +204,8 @@ def participantForm(request,eventid):
                 participantVar.save()
             ticketVar = Ticket(eventV=eventVar,participantV=participantVar)
             ticketVar.save()
+
+            sendEmails([participantVar.email],eventVar)
             #form.save()
             # redirect to a new URL:
             return HttpResponse("Ticket Booked")
@@ -220,24 +224,17 @@ def rsvp(request,eventid):
 
         # Create a form instance and populate it with data from the request (binding):
         form = RsvpForm(request.POST,request.FILES)
-
-
         # Check if the form is valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-
-            participantVar = form.save(commit=False)
-
-            participantVar.save()
-            #form.save()
-            # redirect to a new URL:
-            return HttpResponse("Ticket Booked")
 
 
             rsvpVar = form.save(commit=False)
             rsvpVar.eventV = event.objects.get(id=eventid)
             rsvpVar.status = 'NDA'
             rsvpVar.save()
+            token = str(rsvpVar.token)
+            sendEmails([rsvpVar.tokenPart.email],eventVar,token)
 
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('evite:rsvp' ,kwargs={'eventid':eventVar.id}))
@@ -248,3 +245,22 @@ def rsvp(request,eventid):
     else:
         form = RsvpForm()
     return render(request, 'evite/rsvporg.html', {'form':form,'event':eventVar})
+
+def replyRSVP(request,token):
+
+    try:
+        rsvpVar = rsvp.objects.get(token=token)
+    except rsvp.DoesNotExist:
+        return HttpResponse("Invalid Token")
+
+    if request.method == 'POST':
+        form = RsvpReplyForm(request.POST)
+        rsvpUpdateVar  = form.save(commit=False)
+        if form.is_valid():
+            rsvp.objects.filter(token=token).update(status=rsvpUpdateVar.status)
+
+    else:
+        form = RsvpReplyForm()
+
+
+    return render(request, 'evite/rsvpReply.html', {'form':form,'token':token})

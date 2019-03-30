@@ -11,7 +11,7 @@ import smtplib
 
 
 
-from .forms import EventForm,OrganiserForm
+from .forms import EventForm,OrganiserForm,RsvpForm
 
 from .models import organiser,participant,event
 
@@ -117,11 +117,10 @@ def createEvent(request):
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             eventVar = form.save(commit=False)
             eventVar.organiser = organiser.objects.get(name=request.user.username)
-
             eventVar.save()
             #form.save()
             # redirect to a new URL:
-            return HttpResponse("Event Registered")
+            return HttpResponseRedirect(reverse('evite:rsvp' ,kwargs={'eventid':eventVar.id}))
             #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
 
     # If this is a GET (or any other method) create the default form.
@@ -184,6 +183,7 @@ def sendEmails(recepients,event):
 
     server.quit()
 
+
 	
 def participantForm(request,eventid):
     if request.method == 'POST':
@@ -191,19 +191,47 @@ def participantForm(request,eventid):
         # Create a form instance and populate it with data from the request (binding):
         form = participantForm(request.POST,request.FILES)
 
+
+def rsvp(request,eventid):
+
+    eventVar = event.objects.get(id=eventid)
+
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = RsvpForm(request.POST,request.FILES)
+
+
         # Check if the form is valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+
             participantVar = form.save(commit=False)
 
             participantVar.save()
             #form.save()
             # redirect to a new URL:
             return HttpResponse("Ticket Booked")
+
+
+            rsvpVar = form.save(commit=False)
+            rsvpVar.eventV = event.objects.get(id=eventid)
+            rsvpVar.status = 'NDA'
+            rsvpVar.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('evite:rsvp' ,kwargs={'eventid':eventVar.id}))
+
             #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
 
     # If this is a GET (or any other method) create the default form.
     else:
+
         form = ParticipantForm()
 
     return render(request, 'evite/participantForm.html', {'form':form})
+
+        form = RsvpForm()
+
+    return render(request, 'evite/rsvporg.html', {'form':form,'event':eventVar})
+

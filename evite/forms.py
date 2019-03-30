@@ -1,5 +1,5 @@
 from django import forms
-from .models import event,organiser,participant
+from .models import event,organiser,participant,rsvp
 
 
 class EventInviteListForm(forms.ModelForm):
@@ -16,9 +16,13 @@ class OrganiserForm(forms.ModelForm):
     class Meta:
         model = organiser
         fields = ('company','image')
-
 		
 class ParticipantForm(forms.ModelForm):
     class Meta:
         model = participant
         fields = ('name', 'email', 'phone')
+
+class RsvpForm(forms.ModelForm):
+    class Meta:
+        model = rsvp
+        fields = ('tokenPart',)

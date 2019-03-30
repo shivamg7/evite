@@ -10,7 +10,7 @@ class EventInviteListForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = event
-        fields = ('name', 'startDate', 'endDate', 'city','Venue','category','ticketPrice','image','description')
+        fields = ('name', 'startDate', 'endDate', 'city','Venue','category','ticketPrice','createdBy','image','description')
 
 class OrganiserForm(forms.ModelForm):
     class Meta:
@@ -26,3 +26,8 @@ class RsvpForm(forms.ModelForm):
     class Meta:
         model = rsvp
         fields = ('tokenPart',)
+
+class RsvpReplyForm(forms.ModelForm):
+    class Meta:
+        model = rsvp
+        fields = ('status',)

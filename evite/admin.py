@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
-from .models import event, participant, organiser,Ticket
+from .models import event, participant, organiser,Ticket,rsvp
 from .forms import EventInviteListForm,ParticipantForms
 
 # Register your models here.
@@ -34,3 +34,4 @@ admin.site.register(participant)
 admin.site.register(event, EventAdmin)
 admin.site.register(organiser)
 admin.site.register(Ticket)
+admin.site.register(rsvp)

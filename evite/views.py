@@ -7,7 +7,11 @@ from django.urls import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from .forms import EventForm
+
+
+from .forms import EventForm,OrganiserForm
+
+from .models import organiser,participant,event
 
 
 # Create your views here.
@@ -87,7 +91,9 @@ def register(request):
 
 
     if len(errors)==0 and registered=='success':
-            return HttpResponseRedirect(reverse('evite:login'))
+            user = authenticate(request, username=username,password=password)
+            login(request, user)
+            return HttpResponseRedirect(reverse('evite:fillProfile'))
     else:
         errors.append(registered)
         return render(request, 'evite/register.html', {'error_message':errors})
@@ -117,7 +123,7 @@ def createEvent(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             eventVar = form.save(commit=False)
-
+            # eventVar.organiser =
 
             eventVar.save()
             #form.save()
@@ -130,3 +136,33 @@ def createEvent(request):
         form = EventForm()
 
     return render(request, 'evite/createEvent.html', {'form':form})
+
+
+def fillProfile(request):
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = OrganiserForm(request.POST,request.FILES)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            organiserVar = form.save(commit=False)
+            # eventVar.organiser =
+            organiserVar.email = request.user.email
+            organiserVar.name = request.user.username
+
+            organiserVar.save()
+            #form.save()
+            # redirect to a new URL:
+            return HttpResponse("Organiser profile Registered")
+            #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = OrganiserForm()
+
+    return render(request, 'evite/fillProfile.html', {'form':form})
+
+
+    #return HttpResponse(request.user.username)

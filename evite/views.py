@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
+import smtplib
+
 
 
 from .forms import EventForm,OrganiserForm
@@ -15,9 +17,7 @@ from .models import organiser,participant,event
 
 
 # Create your views here.
-"""
 
-    """
 
 def index(request):
     print(request.user.is_authenticated)
@@ -30,7 +30,6 @@ def index(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('evite:index'))
-
 
 def login_(request):
 
@@ -59,9 +58,6 @@ def login_(request):
         error_message = "Wrong Credentials"
         print("Login Failed")
         return render(request, 'evite/index.html', {'error_message':error_message})
-
-
-
 
 def register(request):
 
@@ -98,8 +94,6 @@ def register(request):
         errors.append(registered)
         return render(request, 'evite/register.html', {'error_message':errors})
 
-
-
 def register_user(usr,mail,passcode):
 
     print("Trying to register user")
@@ -112,7 +106,6 @@ def register_user(usr,mail,passcode):
 
     return "Username is already registered"
 
-
 def createEvent(request):
     if request.method == 'POST':
 
@@ -123,7 +116,7 @@ def createEvent(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             eventVar = form.save(commit=False)
-            # eventVar.organiser =
+            eventVar.organiser = organiser.objects.get(name=request.user.username)
 
             eventVar.save()
             #form.save()
@@ -139,6 +132,11 @@ def createEvent(request):
 
 
 def fillProfile(request):
+
+    #Copy to all views
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('evite:index'))
+
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
@@ -164,5 +162,11 @@ def fillProfile(request):
 
     return render(request, 'evite/fillProfile.html', {'form':form})
 
+def sendEmails(recepients,event):
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.login("rvceise16@gmail.com", "1rv16isxxx")
+    message_body = "HI "+ venue +" "
+    for recepient in recepients:
+        server.sendmail("rvceise16@gmail.com", recepient, message_body )
 
-    #return HttpResponse(request.user.username)
+    server.quit()

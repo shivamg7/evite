@@ -10,7 +10,7 @@ class EventInviteListForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = event
-        fields = ('name', 'startDate', 'endDate', 'city','Venue','category','createdBy','ticketPrice','image','description')
+        fields = ('name', 'startDate', 'endDate', 'city','Venue','category','ticketPrice','image','description')
 
 class OrganiserForm(forms.ModelForm):
     class Meta:

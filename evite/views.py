@@ -167,6 +167,6 @@ def sendEmails(recepients,event):
     server.login("rvceise16@gmail.com", "1rv16isxxx")
     message_body = "HI "+ venue +" "
     for recepient in recepients:
-        server.sendmail("rvceise16@gmail.com", recepient, message_body )
+        server.sendmail("rvceise16@gmail.com", recepient, message_body)
 
     server.quit()

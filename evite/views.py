@@ -184,6 +184,14 @@ def sendEmails(recepients,event):
     server.quit()
 
 
+	
+def participantForm(request,eventid):
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = participantForm(request.POST,request.FILES)
+
+
 def rsvp(request,eventid):
 
     eventVar = event.objects.get(id=eventid)
@@ -193,9 +201,18 @@ def rsvp(request,eventid):
         # Create a form instance and populate it with data from the request (binding):
         form = RsvpForm(request.POST,request.FILES)
 
+
         # Check if the form is valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+
+            participantVar = form.save(commit=False)
+
+            participantVar.save()
+            #form.save()
+            # redirect to a new URL:
+            return HttpResponse("Ticket Booked")
+
 
             rsvpVar = form.save(commit=False)
             rsvpVar.eventV = event.objects.get(id=eventid)
@@ -204,10 +221,17 @@ def rsvp(request,eventid):
 
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('evite:rsvp' ,kwargs={'eventid':eventVar.id}))
+
             #return HttpResponseRedirect(reverse('evite:showEvent',kwargs={'eventId':eventvar.id}))
 
     # If this is a GET (or any other method) create the default form.
     else:
+
+        form = ParticipantForm()
+
+    return render(request, 'evite/participantForm.html', {'form':form})
+
         form = RsvpForm()
 
     return render(request, 'evite/rsvporg.html', {'form':form,'event':eventVar})
+

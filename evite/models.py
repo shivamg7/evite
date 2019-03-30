@@ -54,6 +54,10 @@ class event(models.Model):
 
     def __str__(self):
         return self.name
+		
+class Ticket(models.Model):
+    participantV = models.ForeignKey(participant,on_delete=models.CASCADE)
+    eventV = models.ForeignKey(event,on_delete=models.CASCADE)
 
 
 class rsvp(models.Model):

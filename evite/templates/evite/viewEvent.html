@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{%block body%}
+
+{%load static%}
+{%for event in events%}
+
+<div class="card mb-3">
+  <img src="{{ event.image.url }}" class="card-img-top" alt="Event Image">
+  <div class="card-body">
+    <h5 class="card-title">{{event.name}}</h5>
+    <p class="card-text">{{event.category}}</p>
+    <p class="card-text"><small class="text-muted">{{event.city}}<br>{{event.startDate}}-{{event.endDate}}</small></p>
+  </div>
+</div>
+{%endfor%}
+
+{%endblock%}

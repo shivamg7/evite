@@ -162,6 +162,19 @@ def fillProfile(request):
 
     return render(request, 'evite/fillProfile.html', {'form':form})
 
+
+def viewEvent(request):
+    events =  event.objects.all()
+    return render(request, 'evite/viewEvent.html',{'events': events})
+
+def viewEventDesc(request,eventid):
+    eventvar = event.objects.get(id=eventid)
+    venue = str(event.objects.values_list('Venue',flat=True).get(id=eventid))
+    params = venue.replace(" ","+")
+    params = params.replace(",","%2C")
+    return render(request, 'evite/viewEventDesc.html',{'event': event,'params':params})
+    
+
 def sendEmails(recepients,event):
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server.login("rvceise16@gmail.com", "1rv16isxxx")

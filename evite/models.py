@@ -64,5 +64,6 @@ class rsvp(models.Model):
         ('NDA','Not Filled')
     )
     eventV = models.ForeignKey(event,on_delete=models.CASCADE)
-    token = models.CharField(max_length=10)
+    token = models.AutoField(primary_key=True)
+    tokenPart = models.ForeignKey(participant,on_delete=models.CASCADE)
     status = models.CharField(max_length=3,choices=RSVP_CHOICES)

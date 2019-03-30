@@ -8,12 +8,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
 import smtplib
+from rest_framework import generics
+from .serializers import EventSerializer
 
 
+from .forms import EventForm,OrganiserForm,ParticipantForms
 
-from .forms import EventForm,OrganiserForm
-
-from .models import organiser,participant,event
+from .models import organiser,participant,event,Ticket
 
 
 # Create your views here.
@@ -186,17 +187,22 @@ def sendEmails(recepients,event):
 
 	
 def participantForm(request,eventid):
+    eventVar = event.objects.get(id=eventid)
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
-        form = participantForm(request.POST,request.FILES)
+        form = ParticipantForms(request.POST)
 
         # Check if the form is valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             participantVar = form.save(commit=False)
-
-            participantVar.save()
+            try:
+                participant.objects.get(phone=participantVar.phone)
+            except participant.DoesNotExist:
+                participantVar.save()
+            ticketVar = Ticket(eventV=eventVar,participantV=participantVar)
+            ticketVar.save()
             #form.save()
             # redirect to a new URL:
             return HttpResponse("Ticket Booked")
@@ -204,6 +210,13 @@ def participantForm(request,eventid):
 
     # If this is a GET (or any other method) create the default form.
     else:
-        form = ParticipantForm()
+        form = ParticipantForms()
 
-    return render(request, 'evite/participantForm.html', {'form':form})
+    return render(request, 'evite/participantForm.html', {'form':form,'event':eventVar})
+
+class ListEventView(generics.ListAPIView):
+    """
+    Provides a get method handler.
+    """
+    queryset = event.objects.all()
+    serializer_class = EventSerializer

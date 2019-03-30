@@ -18,7 +18,7 @@ class OrganiserForm(forms.ModelForm):
         fields = ('company','image')
 
 		
-class ParticipantForm(forms.ModelForm):
+class ParticipantForms(forms.ModelForm):
     class Meta:
         model = participant
         fields = ('name', 'email', 'phone')

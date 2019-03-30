@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.test import SimpleTestCase, override_settings
 from django.conf.urls.static import static
+from .views import ListEventView
 
 from . import views
 
@@ -21,5 +22,6 @@ urlpatterns = [
     path('fillProfile/', views.fillProfile, name='fillProfile'),
     path('viewEvent/', views.viewEvent, name='viewEvent'),
 	path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
-	path('participantForm/<int:eventid>', views.participantForm, name='bookTicket'),
+	path('participantForm/<int:eventid>', views.participantForm, name='participantForm'),
+	path('event/', ListEventView.as_view(), name="event-all")
 ]

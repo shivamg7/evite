@@ -8,6 +8,7 @@ from django.test import SimpleTestCase, override_settings
 from django.conf.urls.static import static
 
 from . import views
+from .views import ListEventView
 
 
 app_name = 'evite'
@@ -22,6 +23,7 @@ urlpatterns = [
     path('viewEvent/', views.viewEvent, name='viewEvent'),
 	path('viewEvent/<int:eventid>', views.viewEventDesc, name='viewEventDesc'),
 	path('participantForm/<int:eventid>', views.participantForm, name='participantForm'),
+    path('event/', ListEventView.as_view(), name="event-all"),
     path('rsvp/<int:eventid>', views.rsvp, name='rsvp'),
     path('rsvp-reply/<int:token>', views.replyRSVP, name='rsvp-reply'),
 ]

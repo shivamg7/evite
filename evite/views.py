@@ -9,11 +9,13 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 import smtplib
 
+from rest_framework import generics
+from .serializers import EventSerializer
 
 
 from .forms import EventForm,OrganiserForm,RsvpForm,ParticipantForms
 
-from .models import organiser,participant,event,Ticket
+from .models import organiser,participant,event,Ticket,rsvp
 
 
 # Create your views here.
@@ -264,3 +266,11 @@ def replyRSVP(request,token):
 
 
     return render(request, 'evite/rsvpReply.html', {'form':form,'token':token})
+
+
+class ListEventView(generics.ListAPIView):
+    """
+    Provides a get method handler.
+    """
+    queryset = event.objects.all()
+    serializer_class = EventSerializer

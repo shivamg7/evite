@@ -1,3 +1,3 @@
 # evite
 
-Event Publishin portal App using Django
+Event Publishing portal App using Django
